@@ -1,0 +1,30 @@
+{
+  "name": "mysqlacl",
+  "version": "0.0.1",
+  "description": "Simple ACL class with a mysql backend ",
+  "main": "mysqlacl.js",
+  "dependencies": {
+    "mysql": "^2.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gizur/mysqlacl.git"
+  },
+  "keywords": [
+    "Access",
+    "Control",
+    "List",
+    "ACL",
+    "MySQL"
+  ],
+  "author": "Jonas Colmsjö",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gizur/mysqlacl/issues"
+  },
+  "homepage": "https://github.com/gizur/mysqlacl#readme"
+}
