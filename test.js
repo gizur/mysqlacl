@@ -27,7 +27,7 @@ a.runQuery_('drop table mysqlacl.bucket_perms')
     return a.init();
   })
   .then(function () {
-    return a.grant('mytable', 'get', 'pelle');
+    return a.grant('mytable', ['get', 'post', 'put', 'delete'], 'pelle');
   })
   .then(function (res) {
     return a.isAllowed('mytable', 'get', 'pelle');
@@ -38,7 +38,7 @@ a.runQuery_('drop table mysqlacl.bucket_perms')
   })
   .then(function (res) {
     assert(!res, 'isAllowed that not should succeed');
-    return a.revoke('mytable', 'get', 'pelle');
+    return a.revoke('mytable', ['get'], 'pelle');
   })
   .then(function (res) {
     return a.isAllowed('mytable', 'get', 'pelle');

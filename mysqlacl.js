@@ -75,15 +75,28 @@ Acl.prototype.isAllowed = function (object, verb, role) {
 
 
 // returns true if successful and false otherwise
-Acl.prototype.grant = function (object, verb, role) {
-  var sql = util.format("insert into %s.%s values('%s','%s','%s');", this.options.user, this.table, object, verb, role);
+Acl.prototype.grant = function (object, verbs, role) {
+  var sql = util.format("insert into %s.%s values", this.options.user, this.table);
+
+  verbs.forEach(function (verb, i) {
+    if (i) sql += ",";
+    sql += util.format("('%s','%s','%s')", object, verb, role);
+  });
+
   return this.runQuery_(sql);
 };
 
 // returns true if successful and false otherwise
-Acl.prototype.revoke = function (object, verb, role) {
-  var sql = util.format("delete from %s.%s where object='%s' and verb='%s' and role='%s'",
-    this.options.user, this.table, object, verb, role);
+Acl.prototype.revoke = function (object, verbs, role) {
+  var where = "(";
+  verbs.forEach(function (verb, i) {
+    if (i) where += " or ";
+    where += util.format("verb='%s'", verb);
+  });
+  where += ")";
+
+  var sql = util.format("delete from %s.%s where object='%s' and %s and role='%s'",
+    this.options.user, this.table, object, where, role);
 
   return this.runQuery_(sql)
 };
