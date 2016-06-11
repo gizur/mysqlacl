@@ -17,6 +17,7 @@ var options = {
   host: 'localhost',
   user: 'mysqlacl',
   password: 'mysqlacl',
+  parseSlashes: true
   //  database : process.env.ADMIN_USER,
 };
 
@@ -31,6 +32,10 @@ a.runQuery_('drop table mysqlacl.bucket_perms')
   })
   .then(function (res) {
     return a.isAllowed('mytable', 'get', 'pelle');
+  })
+  .then(function (res) {
+    assert(res, 'isAllowed that should succeed');
+    return a.isAllowed('mytable/subfolder/subfolder', 'get', 'pelle');
   })
   .then(function (res) {
     assert(res, 'isAllowed that should succeed');
