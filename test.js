@@ -17,7 +17,7 @@ var options = {
   host: 'localhost',
   user: 'mysqlacl',
   password: 'mysqlacl',
-  parseSlashes: true
+  parseChar: '/'
   //  database : process.env.ADMIN_USER,
 };
 
