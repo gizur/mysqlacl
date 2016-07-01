@@ -25,6 +25,8 @@ Acl = function (table, options) {
 
   this.table = table;
   this.options = options;
+
+  this.options.connectFromHost = this.options.connectFromHost || 'localhost';
 };
 
 Acl.prototype.init = function () {
@@ -34,6 +36,12 @@ Acl.prototype.init = function () {
 Acl.prototype.createPermTable_ = function () {
   var sql = "create table if not exists " + this.options.user + "." + this.table +
     " (object varchar(255) not null, verb varchar(255) not null, role varchar(255) not null)";
+
+  return this.runQuery_(sql);
+};
+
+Acl.prototype.dropPermTable = function () {
+  var sql = util.format("drop table %s.%s;", this.options.user, this.table);
 
   return this.runQuery_(sql);
 };
@@ -81,7 +89,7 @@ Acl.prototype.isAllowed = function (object, verb, role, accountId) {
 
 
 // returns true if successful and false otherwise
-Acl.prototype.grant = function (object, verbs, role) {
+Acl.prototype.grant = function (object, verbs, role, roleIsDbUser) {
   var sql = util.format("insert into %s.%s values", this.options.user, this.table);
 
   verbs.forEach(function (verb, i) {
@@ -89,7 +97,18 @@ Acl.prototype.grant = function (object, verbs, role) {
     sql += util.format("('%s','%s','%s')", object, verb, role);
   });
 
-  return this.runQuery_(sql);
+  return this.runQuery_(sql).then(function(){
+    if(roleIsDbUser && this.options.user !== role && role !== '*') {
+      var sql = util.format("grant select on %s.%s to '%s'@'%s';",
+                            this.options.user,
+                            this.table,
+                            role,
+                            this.options.connectFromHost);
+                            
+      return this.runQuery_(sql);
+    }
+
+  });
 };
 
 // returns true if successful and false otherwise

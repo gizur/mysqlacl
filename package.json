@@ -1,6 +1,6 @@
 {
   "name": "mysqlacl",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Simple ACL class with a mysql backend ",
   "main": "mysqlacl.js",
   "dependencies": {
