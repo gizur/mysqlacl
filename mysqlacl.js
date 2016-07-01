@@ -63,13 +63,15 @@ Acl.prototype.runQuery_ = function (sql) {
   });
 };
 
-Acl.prototype.isAllowed = function (object, verb, role) {
+Acl.prototype.isAllowed = function (object, verb, role, accountId) {
+  var schema = accountId || this.options.user;
+
   if(this.options.parseChar) {
     object = object.split(this.options.parseChar)[0];
   }
 
   var sql = util.format("select object, verb, role from %s.%s where (object='%s' or object='*') and (verb='%s' or verb='*') and (role='%s' or role='*')",
-    this.options.user, this.table, object, verb, role);
+    schema, this.table, object, verb, role);
 
   return this.runQuery_(sql)
     .then(function (res) {
