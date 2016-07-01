@@ -87,9 +87,10 @@ Acl.prototype.isAllowed = function (object, verb, role, accountId) {
     });
 };
 
-
 // returns true if successful and false otherwise
 Acl.prototype.grant = function (object, verbs, role, roleIsDbUser) {
+  var self = this;
+
   var sql = util.format("insert into %s.%s values", this.options.user, this.table);
 
   verbs.forEach(function (verb, i) {
@@ -98,14 +99,14 @@ Acl.prototype.grant = function (object, verbs, role, roleIsDbUser) {
   });
 
   return this.runQuery_(sql).then(function(){
-    if(roleIsDbUser && this.options.user !== role && role !== '*') {
+    if(roleIsDbUser && self.options.user !== role && role !== '*') {
       var sql = util.format("grant select on %s.%s to '%s'@'%s';",
-                            this.options.user,
-                            this.table,
+                            self.options.user,
+                            self.table,
                             role,
-                            this.options.connectFromHost);
-                            
-      return this.runQuery_(sql);
+                            self.options.connectFromHost);
+
+      return self.runQuery_(sql);
     }
 
   });
