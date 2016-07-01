@@ -68,7 +68,7 @@ Acl.prototype.isAllowed = function (object, verb, role) {
     object = object.split(this.options.parseChar)[0];
   }
 
-  var sql = util.format("select object, verb, role from %s.%s where object='%s' and verb='%s' and role='%s'",
+  var sql = util.format("select object, verb, role from %s.%s where (object='%s' or object='*') and (verb='%s' or verb='*') and (role='%s' or role='*')",
     this.options.user, this.table, object, verb, role);
 
   return this.runQuery_(sql)
